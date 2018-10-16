@@ -28,3 +28,8 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[metadata.heroku]
+  root-package = "github.com/viriyahendarta/butler-core"
+  go-version = "1.11"
+  install = [ "./cmd..." ]

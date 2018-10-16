@@ -1,0 +1,21 @@
+{
+	"debug": true,
+
+	"http_server": {
+		"port": 9000
+	},
+
+	"databases": {
+		"core": {
+			"name": "core",
+			"driver": "postgres",
+			"master_url": "postgres://xezctqmtmldszl:93e72b55f0b861e4460239e3fc42a1e4dd44956948321ff40498cfa30fde3939@ec2-54-243-147-162.compute-1.amazonaws.com:5432/d1jsrqc9ovo1qi",
+			"slave_urls": [
+				"postgres://xezctqmtmldszl:93e72b55f0b861e4460239e3fc42a1e4dd44956948321ff40498cfa30fde3939@ec2-54-243-147-162.compute-1.amazonaws.com:5432/d1jsrqc9ovo1qi"
+			],
+			"max_open_connections": 30,
+			"max_idle_connections": 10,
+			"connection_max_lifetime": 900
+		}
+	}
+}
