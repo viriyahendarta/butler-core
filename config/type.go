@@ -2,9 +2,10 @@ package config
 
 //Config holds all config
 type Config struct {
-	Debug      bool       `json:"debug"`
-	HTTPServer HTTPServer `json:"http_server"`
-	Databases  Databases  `json:"databases"`
+	AuthSecretKey string     `json:"auth_secret_key"`
+	Debug         bool       `json:"debug"`
+	HTTPServer    HTTPServer `json:"http_server"`
+	Databases     Databases  `json:"databases"`
 }
 
 //HTTPServer holds data needed for serving http

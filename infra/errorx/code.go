@@ -1,4 +1,4 @@
-package error
+package errorx
 
 import "net/http"
 
@@ -16,6 +16,7 @@ const (
 	//below that will be treated as http code
 
 	CodeUnknown      Code = 1000
+	CodeParsing      Code = 1001
 	CodeQueryGeneral Code = 2000
 	CodeQueryUser    Code = 2001
 

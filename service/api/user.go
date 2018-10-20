@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/viriyahendarta/butler-core/infra/contextx"
+
 	"github.com/viriyahendarta/butler-core/business/user"
 	serviceresource "github.com/viriyahendarta/butler-core/resource/service"
 )
@@ -29,7 +31,12 @@ func GetUser(resource *serviceresource.Resource) User {
 }
 
 func (u *userAPI) GetUserProfile(r *http.Request) (interface{}, int, error) {
-	profile, err := user.GetGetProfileBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), 1)
+	userID, err := contextx.GetUserID(r.Context())
+	if err != nil {
+		return nil, http.StatusUnauthorized, err
+	}
+
+	profile, err := user.GetGetProfileBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), userID)
 	if err != nil {
 		return nil, -1, err
 	}

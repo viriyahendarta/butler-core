@@ -8,7 +8,7 @@ import (
 	"github.com/viriyahendarta/butler-core/business"
 	userdb "github.com/viriyahendarta/butler-core/database/user"
 	userdomain "github.com/viriyahendarta/butler-core/domain/user"
-	e "github.com/viriyahendarta/butler-core/infra/error"
+	"github.com/viriyahendarta/butler-core/infra/errorx"
 	businessresource "github.com/viriyahendarta/butler-core/resource/business"
 )
 
@@ -39,7 +39,7 @@ func (b *getProfileBusiness) HandleBusiness(ctx context.Context, userID int64) (
 		return nil, err
 	}
 	if user == nil {
-		return nil, e.New(ctx, e.CodeBadRequest, fmt.Sprintf("User with id [%v] is not exists", userID), nil)
+		return nil, errorx.New(ctx, errorx.CodeBadRequest, fmt.Sprintf("User with id [%v] is not exists", userID), nil)
 	}
 
 	return &userdomain.Profile{

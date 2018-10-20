@@ -7,8 +7,9 @@ import (
 	"time"
 
 	"github.com/facebookgo/grace/gracehttp"
-	_context "github.com/viriyahendarta/butler-core/infra/context"
+	"github.com/viriyahendarta/butler-core/infra/contextx"
 	serviceresource "github.com/viriyahendarta/butler-core/resource/service"
+	"github.com/viriyahendarta/butler-core/server/middleware"
 	"github.com/viriyahendarta/butler-core/service/api"
 )
 
@@ -36,14 +37,18 @@ func (s *httpServer) Run(env string) error {
 func (s *httpServer) registerAPI() {
 	router := s.router.PathPrefix("/api")
 
-	userRouter := router.PathPrefix("/user")
+	userRouter := router.PathPrefix("/user").Subrouter()
 	userAPI := api.GetUser(s.serviceResource)
+
+	auth := middleware.GetAuthMiddleware(s.serviceResource)
+
+	userRouter.Use(auth.Middleware)
 	userRouter.Path("/profile").Methods(http.MethodGet).HandlerFunc(s.handleAPI(userAPI.GetUserProfile))
 }
 
 func (s *httpServer) handleAPI(handler api.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ctx := _context.AppendStartTime(r.Context())
+		ctx := contextx.AppendStartTime(r.Context())
 		result, successCode, err := handler(r.WithContext(ctx))
 		s.serviceResource.RenderJSON(ctx, w, result, successCode, err)
 	}

@@ -1,3 +1,3 @@
-package error
+package errorx
 
 type Code int

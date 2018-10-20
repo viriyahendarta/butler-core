@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	e "github.com/viriyahendarta/butler-core/infra/error"
+	"github.com/viriyahendarta/butler-core/infra/errorx"
 	usermodel "github.com/viriyahendarta/butler-core/model/user"
 )
 
@@ -15,7 +15,7 @@ func (ud *userDatabase) Find(ctx context.Context, id int64) (*usermodel.User, er
 	db := ud.CoreDB.Slave()
 	if err := db.Get(user, queryGetUserByID, id); err != nil {
 		if err != sql.ErrNoRows {
-			return nil, e.New(ctx, e.CodeQueryUser, fmt.Sprintf("Failed to find user by id: %v", id), err)
+			return nil, errorx.New(ctx, errorx.CodeQueryUser, fmt.Sprintf("Failed to find user by id: %v", id), err)
 		} else {
 			return nil, nil
 		}
