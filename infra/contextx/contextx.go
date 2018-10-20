@@ -31,6 +31,10 @@ func GetElapsedTime(ctx context.Context) string {
 	return "-1ms"
 }
 
+func AppendUserID(ctx context.Context, userID string) context.Context {
+	return context.WithValue(ctx, UserID, userID)
+}
+
 func GetUserID(ctx context.Context) (int64, error) {
 	sUserID, ok := ctx.Value(UserID).(string)
 	if !ok {

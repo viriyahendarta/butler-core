@@ -66,7 +66,7 @@ func (am *authenticationMiddleware) Middleware(next http.Handler) http.Handler {
 			} else if userID, ok := cUserID.(string); !ok {
 				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Malformed user ID format", nil))
 			} else {
-				newRequest := r.WithContext(context.WithValue(r.Context(), contextx.UserID, userID))
+				newRequest := r.WithContext(contextx.AppendUserID(r.Context(), userID))
 				next.ServeHTTP(w, newRequest)
 			}
 		}
