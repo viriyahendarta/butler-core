@@ -31,12 +31,12 @@ func GetUser(resource *serviceresource.Resource) User {
 }
 
 func (u *userAPI) GetUserProfile(r *http.Request) (interface{}, int, error) {
-	userID, err := contextx.GetUserID(r.Context())
+	authID, err := contextx.GetAuthID(r.Context())
 	if err != nil {
 		return nil, http.StatusUnauthorized, err
 	}
 
-	profile, err := user.GetGetProfileBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), userID)
+	profile, err := user.GetGetProfileBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), authID)
 	if err != nil {
 		return nil, -1, err
 	}

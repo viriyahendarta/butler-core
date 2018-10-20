@@ -14,7 +14,7 @@ type key string
 
 const (
 	StartTime key = constant.APPNAME + "_start_time"
-	UserID    key = constant.APPNAME + "_user_id"
+	AuthID    key = constant.APPNAME + "_auth_id"
 )
 
 func AppendStartTime(ctx context.Context) context.Context {
@@ -31,22 +31,22 @@ func GetElapsedTime(ctx context.Context) string {
 	return "-1ms"
 }
 
-func AppendUserID(ctx context.Context, userID string) context.Context {
-	return context.WithValue(ctx, UserID, userID)
+func AppendAuthID(ctx context.Context, authID string) context.Context {
+	return context.WithValue(ctx, AuthID, authID)
 }
 
-func GetUserID(ctx context.Context) (int64, error) {
-	sUserID, ok := ctx.Value(UserID).(string)
+func GetAuthID(ctx context.Context) (int64, error) {
+	sAuthID, ok := ctx.Value(AuthID).(string)
 	if !ok {
-		return 0, errorx.New(ctx, errorx.CodeBadRequest, "User ID is empty", nil)
+		return 0, errorx.New(ctx, errorx.CodeBadRequest, "Auth ID is empty", nil)
 	}
-	if sUserID == "" {
-		return 0, errorx.New(ctx, errorx.CodeBadRequest, "User ID is empty", nil)
+	if sAuthID == "" {
+		return 0, errorx.New(ctx, errorx.CodeBadRequest, "Auth ID is empty", nil)
 	}
 
-	userID, err := strconv.ParseInt(sUserID, 10, 64)
+	authID, err := strconv.ParseInt(sAuthID, 10, 64)
 	if err != nil {
-		return 0, errorx.New(ctx, errorx.CodeParsing, fmt.Sprintf("Failed to parse user id: %s", sUserID), err)
+		return 0, errorx.New(ctx, errorx.CodeParsing, fmt.Sprintf("Failed to parse Auth ID: %s", sAuthID), err)
 	}
-	return userID, nil
+	return authID, nil
 }

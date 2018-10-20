@@ -15,7 +15,7 @@ import (
 
 const (
 	AuthHTTPHeader  = "Authorization"
-	UserIDClaimName = "user_id"
+	AuthIDClaimName = "auth_id"
 )
 
 type AuthenticationMiddleware interface {
@@ -61,12 +61,12 @@ func (am *authenticationMiddleware) Middleware(next http.Handler) http.Handler {
 		if claims, ok := token.Claims.(jwt.MapClaims); !ok {
 			am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Failed to get claims", nil))
 		} else {
-			if cUserID, ok := claims[UserIDClaimName]; !ok {
-				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "User ID claim is invalid", nil))
-			} else if userID, ok := cUserID.(string); !ok {
-				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Malformed user ID format", nil))
+			if cAuthID, ok := claims[AuthIDClaimName]; !ok {
+				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Auth ID claim is invalid", nil))
+			} else if authID, ok := cAuthID.(string); !ok {
+				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Malformed auth ID format", nil))
 			} else {
-				newRequest := r.WithContext(contextx.AppendUserID(r.Context(), userID))
+				newRequest := r.WithContext(contextx.AppendAuthID(r.Context(), authID))
 				next.ServeHTTP(w, newRequest)
 			}
 		}
