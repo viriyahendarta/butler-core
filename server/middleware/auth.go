@@ -14,14 +14,16 @@ import (
 )
 
 const (
-	AuthHTTPHeader  = "Authorization"
-	AuthIDClaimName = "auth_id"
+	authHTTPHeader  = "Authorization"
+	authIDClaimName = "auth_id"
 )
 
+//AuthenticationMiddleware is auth middleware contract
 type AuthenticationMiddleware interface {
 	Middleware
 }
 
+//authenticationMiddleware is auth middleware implementation
 type authenticationMiddleware struct {
 	serviceResource *serviceresource.Resource
 }
@@ -29,6 +31,7 @@ type authenticationMiddleware struct {
 var mAuth AuthenticationMiddleware
 var once sync.Once
 
+//GetAuthMiddleware creates AuthenticationMiddleware instance
 func GetAuthMiddleware(resource *serviceresource.Resource) AuthenticationMiddleware {
 	once.Do(func() {
 		mAuth = &authenticationMiddleware{
@@ -43,9 +46,10 @@ func (am *authenticationMiddleware) writeError(ctx context.Context, w http.Respo
 	am.serviceResource.RenderJSON(ctx, w, nil, http.StatusUnauthorized, ex)
 }
 
+//Middleware handles auth middleware process
 func (am *authenticationMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.Header.Get(AuthHTTPHeader)
+		tokenString := r.Header.Get(authHTTPHeader)
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -61,7 +65,7 @@ func (am *authenticationMiddleware) Middleware(next http.Handler) http.Handler {
 		if claims, ok := token.Claims.(jwt.MapClaims); !ok {
 			am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Failed to get claims", nil))
 		} else {
-			if cAuthID, ok := claims[AuthIDClaimName]; !ok {
+			if cAuthID, ok := claims[authIDClaimName]; !ok {
 				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Auth ID claim is invalid", nil))
 			} else if authID, ok := cAuthID.(string); !ok {
 				am.writeError(r.Context(), w, "Auth token is invalid", errorx.New(r.Context(), http.StatusUnauthorized, "Malformed auth ID format", nil))

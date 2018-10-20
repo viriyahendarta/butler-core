@@ -10,6 +10,7 @@ import (
 	usermodel "github.com/viriyahendarta/butler-core/model/user"
 )
 
+//Database implement database contract and holds user database implementation
 type Database interface {
 	database.Database
 
@@ -23,6 +24,7 @@ type userDatabase struct {
 var db Database
 var once sync.Once
 
+//GetDatabase returns user database implementation
 func GetDatabase(coreDB *d.DB) Database {
 	once.Do(func() {
 		db = &userDatabase{
@@ -33,6 +35,7 @@ func GetDatabase(coreDB *d.DB) Database {
 	return db
 }
 
+//Begin
 func (ud *userDatabase) Begin() {
 
 }

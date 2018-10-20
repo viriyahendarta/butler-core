@@ -9,16 +9,17 @@ import (
 	usermodel "github.com/viriyahendarta/butler-core/model/user"
 )
 
+//Find returns user with specific id
 func (ud *userDatabase) Find(ctx context.Context, id int64) (*usermodel.User, error) {
 	user := new(usermodel.User)
 
 	db := ud.CoreDB.Slave()
-	if err := db.Get(user, queryGetUserByID, id); err != nil {
+	err := db.Get(user, queryGetUserByID, id)
+	if err != nil {
 		if err != sql.ErrNoRows {
 			return nil, errorx.New(ctx, errorx.CodeQueryUser, fmt.Sprintf("Failed to find user by id: %v", id), err)
-		} else {
-			return nil, nil
 		}
+		return nil, nil
 	}
 
 	return user, nil

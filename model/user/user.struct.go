@@ -1,5 +1,6 @@
 package user
 
+//User holds User database fields
 type User struct {
 	ID        string `db:"user_id"`
 	Email     string `db:"email"`

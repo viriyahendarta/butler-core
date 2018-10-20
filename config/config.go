@@ -33,6 +33,7 @@ func Init() error {
 	return err
 }
 
+//GetEnv returns application env
 func GetEnv() string {
 	env := os.Getenv(appEnv)
 
@@ -45,7 +46,6 @@ func GetEnv() string {
 	return env
 }
 
-//readConfig read config json
 func readConfig() (*Config, error) {
 	env := GetEnv()
 

@@ -16,6 +16,7 @@ const (
 	defaultErrorMessage   = "error"
 )
 
+//RenderJSON writes response with data
 func (r *Resource) RenderJSON(ctx context.Context, w http.ResponseWriter, data interface{}, successHTTPCode int, err error) error {
 	var response interface{}
 
@@ -25,7 +26,7 @@ func (r *Resource) RenderJSON(ctx context.Context, w http.ResponseWriter, data i
 		httpCode = oErr.GetHTTPCodeEquivalent()
 		response = r.buildErrorResponse(ctx, oErr)
 	} else {
-		response = APISuccessResponse{
+		response = apiSuccessResponse{
 			Meta: r.buildMeta(ctx),
 			Data: data,
 		}
@@ -43,8 +44,8 @@ func (r *Resource) RenderJSON(ctx context.Context, w http.ResponseWriter, data i
 	return err
 }
 
-func (r *Resource) buildErrorResponse(ctx context.Context, err *errorx.Error) APIErrorResponse {
-	errResponse := APIError{
+func (r *Resource) buildErrorResponse(ctx context.Context, err *errorx.Error) apiErrorResponse {
+	errResponse := apiError{
 		Code: err.GetCode(),
 		Type: err.GetTitle(),
 	}
@@ -56,14 +57,14 @@ func (r *Resource) buildErrorResponse(ctx context.Context, err *errorx.Error) AP
 		errResponse.Reason = err.GetError().Error()
 	}
 
-	return APIErrorResponse{
+	return apiErrorResponse{
 		Meta:  r.buildMeta(ctx),
 		Error: errResponse,
 	}
 }
 
-func (r *Resource) buildMeta(ctx context.Context) APIMeta {
-	return APIMeta{
+func (r *Resource) buildMeta(ctx context.Context) apiMeta {
+	return apiMeta{
 		ProcessTime: contextx.GetElapsedTime(ctx),
 	}
 }

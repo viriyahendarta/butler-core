@@ -1,22 +1,22 @@
 package service
 
-type APIMeta struct {
+type apiMeta struct {
 	ProcessTime string `json:"process_time"`
 }
 
-type APIError struct {
+type apiError struct {
 	Code     int      `json:"code"`
 	Type     string   `json:"type"`
 	Messages []string `json:"messages"`
 	Reason   string   `json:"reason"`
 }
 
-type APIErrorResponse struct {
-	Meta  APIMeta  `json:"meta"`
-	Error APIError `json:"error"`
+type apiErrorResponse struct {
+	Meta  apiMeta  `json:"meta"`
+	Error apiError `json:"error"`
 }
 
-type APISuccessResponse struct {
-	Meta APIMeta     `json:"meta"`
+type apiSuccessResponse struct {
+	Meta apiMeta     `json:"meta"`
 	Data interface{} `json:"data"`
 }

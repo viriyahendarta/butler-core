@@ -5,6 +5,7 @@ import (
 	serviceresource "github.com/viriyahendarta/butler-core/resource/service"
 )
 
+//Server holds contract for all server implementation
 type Server interface {
 	Run(env string) error
 }

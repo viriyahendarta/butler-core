@@ -12,28 +12,31 @@ import (
 	businessresource "github.com/viriyahendarta/butler-core/resource/business"
 )
 
-type getProfileBusiness struct {
+type getInfoBusiness struct {
 	userDB userdb.Database
 }
 
-type GetProfileBusiness interface {
+//GetInfoBusiness implement business contract for Get Info
+type GetInfoBusiness interface {
 	business.Business
-	HandleBusiness(ctx context.Context, userID int64) (*userdomain.Profile, error)
+	HandleBusiness(ctx context.Context, userID int64) (*userdomain.Info, error)
 }
 
-var bGetProfile GetProfileBusiness
+var bGetInfo GetInfoBusiness
 var once sync.Once
 
-func GetGetProfileBusiness(resource *businessresource.Resource) GetProfileBusiness {
+//GetGetInfoBusiness returns GetInfoBusiness implementation
+func GetGetInfoBusiness(resource *businessresource.Resource) GetInfoBusiness {
 	once.Do(func() {
-		bGetProfile = &getProfileBusiness{
+		bGetInfo = &getInfoBusiness{
 			userDB: resource.UserDB,
 		}
 	})
-	return bGetProfile
+	return bGetInfo
 }
 
-func (b *getProfileBusiness) HandleBusiness(ctx context.Context, userID int64) (*userdomain.Profile, error) {
+//HandleBusiness handles Get Info business processs
+func (b *getInfoBusiness) HandleBusiness(ctx context.Context, userID int64) (*userdomain.Info, error) {
 	user, err := b.userDB.Find(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -42,7 +45,7 @@ func (b *getProfileBusiness) HandleBusiness(ctx context.Context, userID int64) (
 		return nil, errorx.New(ctx, errorx.CodeBadRequest, fmt.Sprintf("User with id [%v] is not exists", userID), nil)
 	}
 
-	return &userdomain.Profile{
+	return &userdomain.Info{
 		Email:     user.Email,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,

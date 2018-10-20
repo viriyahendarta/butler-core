@@ -9,9 +9,11 @@ import (
 )
 
 const (
+	//PostgresDriver name
 	PostgresDriver string = "postgres"
 )
 
+//DB struct
 type DB struct {
 	mtx sync.RWMutex
 
@@ -21,8 +23,10 @@ type DB struct {
 	counter uint64
 }
 
+//PrepStmt prepare statement
 type PrepStmt string
 
+//New creates new DB instance
 func New(driver string, dbs []*sql.DB) *DB {
 	db := &DB{
 		driver: driver,
@@ -32,6 +36,7 @@ func New(driver string, dbs []*sql.DB) *DB {
 	return db
 }
 
+//Master returns master DB
 func (db *DB) Master() *sqlx.DB {
 	db.mtx.RLock()
 	defer db.mtx.RUnlock()
@@ -39,6 +44,7 @@ func (db *DB) Master() *sqlx.DB {
 	return sqlx.NewDb(db.dbs[0], db.driver)
 }
 
+//Slave returns slave DB
 func (db *DB) Slave() *sqlx.DB {
 	db.mtx.RLock()
 	defer db.mtx.RUnlock()

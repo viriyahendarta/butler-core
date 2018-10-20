@@ -13,6 +13,7 @@ import (
 	"github.com/viriyahendarta/butler-core/service/api"
 )
 
+//InitHTTPServer initialize http server
 func InitHTTPServer(serviceResource *serviceresource.Resource, port int) Server {
 	return &httpServer{
 		serviceResource: serviceResource,
@@ -21,6 +22,7 @@ func InitHTTPServer(serviceResource *serviceresource.Resource, port int) Server 
 	}
 }
 
+//Run run the http server and start listening for request
 func (s *httpServer) Run(env string) error {
 	s.registerAPI()
 
@@ -43,7 +45,7 @@ func (s *httpServer) registerAPI() {
 	auth := middleware.GetAuthMiddleware(s.serviceResource)
 
 	userRouter.Use(auth.Middleware)
-	userRouter.Path("/profile").Methods(http.MethodGet).HandlerFunc(s.handleAPI(userAPI.GetUserProfile))
+	userRouter.Path("/info").Methods(http.MethodGet).HandlerFunc(s.handleAPI(userAPI.GetUserInfo))
 }
 
 func (s *httpServer) handleAPI(handler api.HandlerFunc) http.HandlerFunc {

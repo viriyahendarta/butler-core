@@ -10,8 +10,9 @@ import (
 	serviceresource "github.com/viriyahendarta/butler-core/resource/service"
 )
 
+//User holds user services implementation
 type User interface {
-	GetUserProfile(r *http.Request) (interface{}, int, error)
+	GetUserInfo(r *http.Request) (interface{}, int, error)
 }
 
 type userAPI struct {
@@ -21,6 +22,7 @@ type userAPI struct {
 var uAPI User
 var once sync.Once
 
+//GetUser returns user service
 func GetUser(resource *serviceresource.Resource) User {
 	once.Do(func() {
 		uAPI = &userAPI{
@@ -30,16 +32,17 @@ func GetUser(resource *serviceresource.Resource) User {
 	return uAPI
 }
 
-func (u *userAPI) GetUserProfile(r *http.Request) (interface{}, int, error) {
+//GetUserInfo handles Get User Info request
+func (u *userAPI) GetUserInfo(r *http.Request) (interface{}, int, error) {
 	authID, err := contextx.GetAuthID(r.Context())
 	if err != nil {
 		return nil, http.StatusUnauthorized, err
 	}
 
-	profile, err := user.GetGetProfileBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), authID)
+	info, err := user.GetGetInfoBusiness(u.ServiceResource.BusinessResource).HandleBusiness(r.Context(), authID)
 	if err != nil {
 		return nil, -1, err
 	}
 
-	return profile, http.StatusOK, nil
+	return info, http.StatusOK, nil
 }
